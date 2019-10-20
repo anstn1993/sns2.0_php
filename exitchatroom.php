@@ -185,6 +185,7 @@ else {
         $image4 = $row_['image4'];
         $image5 = $row_['image5'];
         $image6 = $row_['image6'];
+        $video = $row_['video'];
         //이미지 파일들을 지워준다.
         if (!empty($image1)) {
             unlink('chatimage/' . $image1);
@@ -208,6 +209,10 @@ else {
 
         if (!empty($image6)) {
             unlink('chatimage/' . $image6);
+        }
+
+        if (!empty($video)) {
+            unlink('chatvideo/' . $video);
         }
     }
     //해당 채팅방의 chat데이터들도 삭제해준다.

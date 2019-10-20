@@ -12,6 +12,7 @@ $image3 = $_FILES['image3']['name'];
 $image4 = $_FILES['image4']['name'];
 $image5 = $_FILES['image5']['name'];
 $image6 = $_FILES['image6']['name'];
+$video = $_FILES['video']['name'];
 $time = date("Y-m-d H:i:s");
 
 $host = 'localhost';
@@ -61,7 +62,7 @@ else {
 
 //채팅 데이터를 넣어주는 쿼리 실행
 $sql = "
-INSERT INTO chat (roomNum, sender, receiver, message, image1, image2, image3, image4, image5, image6, time, unchecked_participant, type)
+INSERT INTO chat (roomNum, sender, receiver, message, image1, image2, image3, image4, image5, image6, video, time, unchecked_participant, type)
 VALUES (
 '$roomNum',
 '$account',
@@ -73,6 +74,7 @@ VALUES (
 '$image4',
 '$image5',
 '$image6',
+'$video',
 '$time',
 '$unCheckedParticipant',
 '$type'
@@ -204,7 +206,7 @@ if (!empty($exifData6['Orientation'])) {
     }
 }
 
-//파일의 경로
+//이미지 파일의 경로
 $save_dir = './chatimage';
 //서버에 회전값이 반영된 이미지 파일들을 업로드한다.
 imagejpeg($src1, "$save_dir/$image1");
@@ -213,6 +215,11 @@ imagejpeg($src3, "$save_dir/$image3");
 imagejpeg($src4, "$save_dir/$image4");
 imagejpeg($src5, "$save_dir/$image5");
 imagejpeg($src6, "$save_dir/$image6");
+
+//동영상 파일의 경로
+$save_dir = './chatvideo/';
+//비디오 파일을 tep_name의 경로(임시 경로)에서 chatvideo경로로 이동해서 저장해준다.
+move_uploaded_file($_FILES['video']['tmp_name'], $save_dir.$video);
 
 $sql = "
     SELECT*FROM chat, (SELECT id as roomNum, participant FROM chatroom)chatroom
@@ -238,6 +245,7 @@ $upload_data = array(
     'image4' => $image4,
     'image5' => $image5,
     'image6' => $image6,
+    'video' => $video,
     'time' => $time,
     'unCheckedParticipant'=>$unCheckedParticipant
 );

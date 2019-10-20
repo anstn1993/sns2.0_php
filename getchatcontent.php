@@ -39,12 +39,17 @@ if ($size > 0) {
         $nickname = $row['nickname'];//닉네임
         $message = $row['message'];//채팅 메세지
 
+        //채팅 이미지 배열
         $imageList = array($row['image1'], $row['image2'], $row['image3'], $row['image4'], $row['image5'], $row['image6']);
         foreach ($imageList as $key => $image) {
             if (empty($imageList[$key]) || $imageList[$key] == "") {
                 unset($imageList[$key]);
             }
-        }//채팅 이미지 배열
+        }
+
+        //동영상
+        $video = $row['video'];
+
         $type = $row['type'];
         $time = $row['time'];
         $unCheckedParticipant = $row['unchecked_participant'];
@@ -131,6 +136,7 @@ if ($size > 0) {
             'nickname' => $nickname,
             'message' => $message,
             'imageList' => $imageList,
+            'video'=>$video,
             'type' => $type,
             'time' => $time,
             'unCheckedParticipant' => $unCheckedParticipant,
@@ -148,40 +154,71 @@ if ($size > 0) {
 if ($isFirstLoad === true) {
     //채팅방에 있는 전체 사진 데이터를 담아주기 위해서 sql을 선언한다.
     $sql = "
-        SELECT account, nickname, image, time, image1, image2, image3, image4, image5, image6 FROM chat
+        SELECT account, nickname, image, time, image1, image2, image3, image4, image5, image6, video, type FROM chat
         JOIN user ON chat.sender=user.account
-        WHERE image1 <> '' AND roomNum = '{$roomNum}'
+        WHERE (image1 <> '' OR image1 <> NULL OR video <> '' OR video <> NULL) AND roomNum = '{$roomNum}'
         ";
 
     $result = mysqli_query($conn, $sql);
     $size = mysqli_num_rows($result);
     if ($size > 0) {
         //전체 사진 데이터를 json형태로 담기 위해서 배열 선언
-        $totalImageData = array();
+        $totalContentData = array();
         while ($row = mysqli_fetch_array($result)) {
             $account = $row['account'];
             $nickname = $row['nickname'];
             $profile = $row['image'];
             $time = $row['time'];
-            $imageList = array($row['image1'], $row['image2'], $row['image3'], $row['image4'], $row['image5'], $row['image6']);//이미지 배열
-            foreach ($imageList as $key => $value) {//반복문을 통해서 값이 없는 이미지의 경우 배열에서 제거해준다.
-                if (empty($imageList[$key]) || $imageList[$key] == '') {
-                    unset($imageList[$key]);
+            $type = $row['type'];
+            $contentList = array(
+                'image1' => $row['image1'],
+                'image2' => $row['image2'],
+                'image3' => $row['image3'],
+                'image4' => $row['image4'],
+                'image5' => $row['image5'],
+                'image6' => $row['image6'],
+                'video' => $row['video']);//컨텐츠 배열
+
+            foreach ($contentList as $key => $value) {//반복문을 통해서 값이 없는 컨텐츠의 경우 배열에서 제거해준다.
+                if (empty($contentList[$key]) || $contentList[$key] == "") {
+                    unset($contentList[$key]);
                 }
             }
-            for ($i = 0; $i < count($imageList); $i++) {//이미지 배열의 크기만큼 반복문을 돌면서 데이터를 추가해준다.
-                array_push($totalImageData, array(
+//            for ($i = 0; $i<count($contentList) ; $i ++) {
+//                if(empty($contentList[$i] || $contentList[$i] == '')) {
+//                    array_splice($contentList, $i, 1);
+//                }
+//            }
+//            foreach ($contentList as $key) {
+//                if(empty($contentList[$key] || $contentList[$key] == '')) {
+//                    array_splice($contentList, 0, 1);
+//                }
+//            }
+
+//            for ($i = 0; $i < count($contentList); $i++) {//컨텐츠 배열의 크기만큼 반복문을 돌면서 데이터를 추가해준다.
+//                array_push($totalContentData, array(
+//                    'account' => $account,
+//                    'nickname' => $nickname,
+//                    'profile' => $profile,
+//                    'time' => $time,
+//                    'type' => $type,
+//                    'content' => $contentList[$i]
+//                ));
+//            }
+            foreach ($contentList as $key => $value) {//컨텐츠 배열의 크기만큼 반복문을 돌면서 데이터를 추가해준다.
+                array_push($totalContentData, array(
                     'account' => $account,
                     'nickname' => $nickname,
                     'profile' => $profile,
                     'time' => $time,
-                    'image' => $imageList[$i]
+                    'type' => $type,
+                    'content' => $value
                 ));
             }
         }
         header('Content-Type: application/json; charset=utf8');
         //json_encode()함수는 첫번째 인자로 string이나 array를 넣으면 그 데이터를 json화시켜 string형태로 출력해주는 함수다.
-        $json = json_encode(array("requestType" => $requestType, "chatContentList" => $data, "totalImageData" => $totalImageData), JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
+        $json = json_encode(array("requestType" => $requestType, "chatContentList" => $data, "totalContentData" => $totalContentData), JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
         echo $json;
     } else {
         header('Content-Type: application/json; charset=utf8');
