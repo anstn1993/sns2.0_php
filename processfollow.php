@@ -4,7 +4,7 @@ include("connectdatabase.php");//데이터베이스와 연결
 $jsonData = json_decode(file_get_contents("php://input"), true);
 $followState = $jsonData['followState'];//팔로우 상태(팔로우를 하는 상태인지 취소하는 상태인지)
 $followedAccount = $jsonData['followedAccount'];//팔로우를 당하는 사용자 계정
-$followedNickname = $jsonData['followedNickname'];//팔로우 당하는 사용자 계정
+$followedNickname = $jsonData['followedNickname'];//팔로우 당하는 사용자 닉네임
 $followingAccount = $jsonData['followingAccount'];//팔로우를 하는 사용자 계정
 $position = $jsonData['position'];//리사이클러뷰 상에서 팔로우를 당한 사용자의 목록이 위치한 index
 
