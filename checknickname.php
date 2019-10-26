@@ -1,14 +1,9 @@
 <?php
-$host = 'localhost';
-$username = 'moonsoo'; # MySQL 계정 아이디
-$password = 'Rla933466r!'; # MySQL 계정 패스워드
-$dbname = 'SNS';  # DATABASE 이름
-
+include("connectdatabase.php");//데이터베이스와 연결
 
 //클라이언트에서 넘어온 회원가입란에 입력한 id
 $nickname=$_POST['nickname'];
 
-$conn = mysqli_connect($host, $username, $password, $dbname);
 $sql="
     SELECT*FROM user
     WHERE nickname='{$nickname}'

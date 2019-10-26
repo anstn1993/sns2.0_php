@@ -43,14 +43,21 @@ if ($isSearched == true) {
 
             $result_ = mysqli_query($conn, $sql);
             $row_ = mysqli_fetch_array($result_);
-
+            $type = "image";//게시물 타입
+            //게시물이 비디오 타입인 경우
+            if (!empty($row_['video']) || $row_['video'] != "") {
+                $type = "video";
+            }
             $image = $row_['image1'];
+            $video = $row_['video'];
 
             array_push($data,
                 array(
                     'id' => $id,
+                    'type'=>$type,
                     'tag' => $tag,
                     'image' => $image,
+                    'video'=>$video,
                     'count' => $count
                 ));
         }
@@ -85,7 +92,6 @@ else {
 
             $result_ = mysqli_query($conn, $sql);
             $row_ = mysqli_fetch_array($result_);
-            $type = "image";
             $type = "image";//게시물 타입
             //게시물이 비디오 타입인 경우
             if (!empty($row_['video']) || $row_['video'] != "") {

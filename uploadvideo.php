@@ -1,4 +1,5 @@
 <?php
+include("connectdatabase.php");//데이터베이스와 연결
 //클라이언트에서 넘어온 게시물 데이터를 변수에 담아준다.
 //이 중에서 article, address, latitude, longitude는 null일 수도 있는데 그래도 데이터베이스에 저장되는 것에는 무관하기 때문에 그냥 둔다.
 $account = $_POST['account'];
@@ -9,13 +10,7 @@ $address = $_POST['address'];
 $latitude = $_POST['latitude'];
 $longitude = $_POST['longitude'];
 
-$host = 'localhost';
-$username = 'moonsoo'; # MySQL 계정 아이디
-$userpassword = 'Rla933466r!'; # MySQL 계정 패스워드
-$dbname = 'SNS';  # DATABASE 이름
 
-//데이터베이스와 연결
-$conn = mysqli_connect($host, $username, $userpassword, $dbname);
 
 //해시태그를 먼저 뽑아내서 해시태그 테이블에 저장시켜준다.
 //게시글에 해시태그가 존재한다면

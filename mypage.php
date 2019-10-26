@@ -1,6 +1,5 @@
 <?php
-include("session.php");
-
+include("connectdatabase.php");//데이터베이스와 연결
 //게시물 페이지의 주인 account
 $userAccount=$_GET['userAccount'];
 //로그인한 사용자의 account
@@ -8,13 +7,7 @@ $myAccount = $_GET['myAccount'];
 //로그인한 사용자가 게시물 페이지의 주인을 follow하고 있는지 여부
 $isFollowing = false;
 
-$host = 'localhost';
-$username = 'moonsoo'; # MySQL 계정 아이디
-$userpassword = 'Rla933466r!'; # MySQL 계정 패스워드
-$dbname = 'SNS';  # DATABASE 이름
 
-//데이터베이스와 연결
-$conn = mysqli_connect($host, $username, $userpassword, $dbname);
 
 //사용자에게 넘겨받은 아이디로 user테이블 조회
 $sql="

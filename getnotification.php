@@ -73,8 +73,14 @@ if ($size > 0) {
 
         $result_ = mysqli_query($conn, $sql);
         $row_ = mysqli_fetch_array($result_);
+        $type = "image";//알림의 대상이 되는 게시물의 타입(image, video)
         //알림의 대상이 되는 게시물의 대표 이미지
         $image = $row_['image1'];
+        if (!empty($row_['video']) || $row_['video'] != "") {
+            $type = "video";
+            $image = $row_['video'];
+        }
+
         //알림의 확인 여부
         $isChecked = false;
         if ($row['is_checked'] == 1) {
@@ -103,6 +109,7 @@ if ($size > 0) {
                 'profile' => $profile,
                 'nickname' => $nickname,
                 'body' => $body,
+                'type' => $type,
                 'image' => $image,
                 'category' => $category,
                 'isChecked' => $isChecked,

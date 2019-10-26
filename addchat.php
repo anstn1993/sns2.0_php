@@ -1,4 +1,5 @@
 <?php
+include("connectdatabase.php");//데이터베이스와 연결
 //클라이언트에서 넘어온 게시물 데이터를 변수에 담아준다.
 //이 중에서 article, image(2,3,4,5,6), address, latitude, longitude는 null일 수도 있는데 그래도 데이터베이스에 저장되는 것에는 무관하기 때문에 그냥 둔다.
 $roomNum = $_POST['roomNum'];
@@ -14,14 +15,6 @@ $image5 = $_FILES['image5']['name'];
 $image6 = $_FILES['image6']['name'];
 $video = $_FILES['video']['name'];
 $time = date("Y-m-d H:i:s");
-
-$host = 'localhost';
-$username = 'moonsoo'; # MySQL 계정 아이디
-$userpassword = 'Rla933466r!'; # MySQL 계정 패스워드
-$dbname = 'SNS';  # DATABASE 이름
-
-//데이터베이스와 연결
-$conn = mysqli_connect($host, $username, $userpassword, $dbname);
 
 //chat table의 unchecked_participant필드 값을 채워주기 위해서 chatroom table의 participant값을 가져온다.
 $sql = "

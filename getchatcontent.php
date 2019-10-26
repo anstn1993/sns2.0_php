@@ -156,7 +156,7 @@ if ($isFirstLoad === true) {
     $sql = "
         SELECT account, nickname, image, time, image1, image2, image3, image4, image5, image6, video, type FROM chat
         JOIN user ON chat.sender=user.account
-        WHERE (image1 <> '' OR image1 <> NULL OR video <> '' OR video <> NULL) AND roomNum = '{$roomNum}'
+        WHERE (image1 <> '' OR image1 <> NULL OR video <> '' OR video <> NULL) AND roomNum = '{$roomNum}' ORDER BY time ASC
         ";
 
     $result = mysqli_query($conn, $sql);
